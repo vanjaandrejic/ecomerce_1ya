@@ -1,0 +1,14 @@
+{
+    "name": "fujitsu/ecomerce-by1ya",
+    "autoload": {
+        "psr-4": {
+            "EcomerceBy1ya\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Vanja Andrejic",
+            "email": "vanjaandrejic5@gmail.com"
+        }
+    ]
+}
