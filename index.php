@@ -2,6 +2,8 @@
 
 require_once 'vendor/autoload.php';
 
+use EcomerceBy1ya\Product;
+
 // require_once "Product.php";
 // require_once "Cart.php";
 // require_once "CartItem.php";
@@ -25,81 +27,14 @@ $cartItem3 = $cart->addProduct($product3, 3); */
 // $cartItem2->decreaseQuantity(2);
 
 
-
 // echo $cart->getTotalQuantity(). " total quantity" . PHP_EOL;
 // echo $cart->getTotalSum(). " total sum" . PHP_EOL;
 
-$db = new PDO('mysql:host=localhost;dbname=Ecommerce1ya', 'root', 'new-password', []);
+//$product = new Product(['naziv' => 'Galaxy S5', 'cena' => 350, 'id_kat' => 1, 'id_spec' => 1, 'id_marka' => 1,'availibleQuantity' => 10]);
+
+//$product->createData();
 
 
-function fetchData($db)
-{
-    try {
+Product::fetchData();
 
-        $query = 'SELECT `Proizvod`.*,
-                         `Marka` . `naziv_marke`,
-                            `Specifikacija` . `procesor`, `Specifikacija` . `ram_memorija`, `Specifikacija` . `rom_memorija`
-
-                             FROM `Proizvod`
-                           
-                             INNER JOIN `Marka` ON `Proizvod`. `id_marka` = `Marka`. `id` 
-                             INNER JOIN `Specifikacija` ON `Proizvod`. `id_specifikacija` = `Specifikacija`. `id`
-
-                             WHERE `Marka` . `naziv_marke` = :marka
-
-                             ORDER BY `Marka`. `naziv_marke`';
-
-        $stmt = $db->prepare($query);
-
-        $marka = 'Samsung';
-        $stmt->bindValue('marka', $marka);
-
-        $stmt->execute();
-
-        foreach($stmt as $product){
-            echo $product['naziv_marke'] . ' ' . $product['naziv_proizvod']. PHP_EOL;
-        }
-
-    } catch (PDOException $e) {
-
-        throw new PDOException($e->getMessage(), $e->getCode());
-    }
-};
-
-
-
-function insertData($db)
-{
-    try {
-        $query = 'INSERT INTO Proizvod (naziv_proizvod, cena_proizvod, id_kategorija, id_specifikacija, id_marka)
-                  VALUES (:naziv, :cena, :kat, :spec, :marka)'; 
-                  
-        $stmt = $db->prepare($query);
-
-        $naziv = 'Galaxy S5';
-        $cena = 300;
-        $kat= 1;
-        $spec = 1;
-        $marka = 1;
-
-        $stmt->bindValue(':naziv', $naziv);
-        $stmt->bindValue(':cena', $cena);
-        $stmt->bindValue(':kat', $kat);
-        $stmt->bindValue(':spec', $spec);
-        $stmt->bindValue(':marka', $marka);
-
-        $stmt->execute();
-
-        foreach($stmt as $product){
-            echo $product['naziv_marke'] . ' ' . $product['naziv_proizvod']. PHP_EOL;
-        }
-
-        fetchData($db);
-
-    } catch (PDOException $e) {
-
-        throw new PDOException($e->getMessage(), $e->getCode());
-    }
-};
-
-insertData($db);
+//insertData($db);
