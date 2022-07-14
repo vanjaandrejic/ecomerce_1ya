@@ -3,6 +3,7 @@
 require_once 'vendor/autoload.php';
 
 use EcomerceBy1ya\Product;
+use EcomerceBy1ya\ProductForm;
 
 // require_once "Product.php";
 // require_once "Cart.php";
@@ -33,8 +34,19 @@ $cartItem3 = $cart->addProduct($product3, 3); */
 //$product = new Product(['naziv' => 'Galaxy S5', 'cena' => 350, 'id_kat' => 1, 'id_spec' => 1, 'id_marka' => 1,'availibleQuantity' => 10]);
 
 //$product->createData();
+try {
+    $product = Product::getByIdFromDb(17);
+} catch (Exception $e){
+    echo $e->getMessage();
+    exit;
+}
 
 
-Product::fetchData();
+$productForm = ProductForm::loadProduct($product);
+var_dump($productForm);
 
-//insertData($db);
+//var_dump($productForm);
+
+//$product->deleteData();
+
+//Product::fetchData();

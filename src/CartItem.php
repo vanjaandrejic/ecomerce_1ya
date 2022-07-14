@@ -48,6 +48,5 @@ class CartItem
         }
 
         $this->quantity -= $amount;
-    }
-    
+    } 
 };

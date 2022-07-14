@@ -2,17 +2,24 @@
 
 namespace EcomerceBy1ya;
 
+use Exception;
+
 class Product
 {
-    
-    private int $id;
-    private string $naziv;
-    private float $cena;
-    private int $id_kat;
-    private int $id_spec;
-    private int $id_marka;
-    private int $availibleQuantity;
-    private static $db = null;
+    protected int $id;
+    protected string $naziv;
+    protected float $cena;
+    protected int $id_kat;
+    protected int $id_spec;
+    protected int $id_marka;
+    protected int $availibleQuantity;
+    protected static $db = null;
+
+    protected static $dbMapper = ['cena_proizvod' => 'cena',
+                                'dostupna_kolicina' => 'availibleQuantity',
+                                'id_kategorija' => 'id_kat',
+                                'id_specifikacija' => 'id_spec',
+                                'naziv_proizvod' => 'naziv'];
 
     // public function __construct($id = NULL, $naziv, $cena, $id_kat, $id_spec, $id_marka, $availibleQuantity = 1)
     // {
@@ -28,9 +35,19 @@ class Product
     public function __construct($niz)
     {
         foreach ($niz as $key=>$value) {
+            // u slucaju da se poklapa property sa imenima koja se podudaraju baza = php
             if (property_exists($this, $key)) {
                 $this->$key = $value;
-            }            
+
+            // proverava da li property postoji u nizu dbMapper
+            } else if(array_key_exists($key, self::$dbMapper)) {
+                $propertyValue = self::$dbMapper[$key];
+
+            // ako postoji property u objektu dodeljuje mu vrednost
+                if (property_exists($this, $propertyValue)){
+                    $this->$propertyValue = $value;
+                }
+            }           
         }
     }
 
@@ -43,6 +60,8 @@ class Product
     {
         $this->$property = $value;
     }
+
+
 
     protected static function getDb(): \PDO
     {
@@ -59,10 +78,8 @@ class Product
         return self::$db;
     }
 
-    public static function getByIdFromDb($id) 
+    public static function getByIdFromDb($id)
     {
-        $pr = 
-
         $query = 'SELECT * FROM Proizvod WHERE id = :id';
 
         $stmt = self::getDb()->prepare($query);
@@ -70,10 +87,12 @@ class Product
         $stmt->bindValue(':id',(int) $id);
 
         $stmt->execute();
-        $stmt->fetch();
+        $niz = $stmt->fetch();
 
-        //$product = new Product($this->id);
-
+        // if(empty($niz)){
+        //     throw new Exception("Proizvod pod id $id ne postoji");
+        // }
+        return new Product($niz);
     }
 
     static function fetchData()
@@ -98,11 +117,13 @@ class Product
             $stmt->bindValue('marka', $marka);
 
             $stmt->execute();
+
             $niz = $stmt->fetchAll();
 
-            var_dump($niz);
+            //var_dump($niz);
 
-            foreach ($stmt as $product) {
+            foreach ($niz as $product) {
+
                 //echo $product['naziv_marke'] . ' ' . $product['naziv_proizvod']. PHP_EOL; // odnosi se na niz
                 echo $product->naziv_marke . ' ' . $product->naziv_proizvod . PHP_EOL;      // odnosi se na objekat
             }
