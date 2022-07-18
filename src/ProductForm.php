@@ -2,9 +2,17 @@
 
 namespace EcomerceBy1ya;
 
-class ProductForm extends Product
+class ProductForm extends Model
 {
-    protected $productFormArr = ['id', 'naziv', 'cena', 'id_kat', 'id_spec', 'id_marka', 'availibleQuantity'];
+    public int $id;
+    public string $naziv;
+    public float $cena;
+    public int $id_kat;
+    public int $id_spec;
+    public int $id_marka;
+    public int $availibleQuantity;
+
+    protected $productFormArr = ['naziv', 'cena', 'id_kat', 'id_spec', 'id_marka', 'availibleQuantity'];
 
     public function __construct()
     {
@@ -15,7 +23,7 @@ class ProductForm extends Product
     {
         $form = new self();
 
-        foreach($form->productFormArr as $key){
+        foreach(get_object_vars($product) as $key=>$value){
             $form->$key = $product->$key;
         }
         
@@ -30,22 +38,20 @@ class ProductForm extends Product
         return $form;
     }
 
-    public function updateForm($niz)
+    public function updateForm($niz) //dobija se updated objekat forme
     {
+        
         foreach ($niz as $key=>$value) {
-            // u slucaju da se poklapa property sa imenima koja se podudaraju baza = php
-            if (property_exists($this, $key)) {
-                $this->$key = $value;
-
-            // proverava da li property postoji u nizu dbMapper
-            } else if(array_key_exists($key, self::$dbMapper)) {
-                $propertyValue = self::$dbMapper[$key];
+                
+            // proverava da li property postoji u nizu productFormArr
+             if(in_array($key, $this->productFormArr)) {
 
             // ako postoji property u objektu dodeljuje mu vrednost
-                if (property_exists($this, $propertyValue)){
-                    $this->$propertyValue = $value;
+                if (property_exists($this, $key)){
+                    $this->$key = $value;
                 }
-            }           
+            }
         }
+        return $this;
     }
 }

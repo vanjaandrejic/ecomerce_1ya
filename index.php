@@ -20,7 +20,6 @@ $cartItem2 = $cart->addProduct($product2, 5);
 $cartItem3 = $cart->addProduct($product3, 3); */
 
 
-
 // echo $cart->getTotalQuantity(). " total quantity" . PHP_EOL;
 // echo $cart->getTotalSum(). " total sum" . PHP_EOL;
 
@@ -36,14 +35,16 @@ $cartItem3 = $cart->addProduct($product3, 3); */
 //$product->createData();
 try {
     $product = Product::getByIdFromDb(17);
+    $productForm = ProductForm::loadProduct($product);
+    $productForm->updateForm(['naziv'=>'106 pluss', 'cena'=>28]);
+    $product->load($productForm);
+    $product->updateData();
 } catch (Exception $e){
     echo $e->getMessage();
     exit;
 }
 
 
-$productForm = ProductForm::loadProduct($product);
-var_dump($productForm);
 
 //var_dump($productForm);
 

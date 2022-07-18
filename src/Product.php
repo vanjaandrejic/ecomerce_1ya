@@ -4,22 +4,22 @@ namespace EcomerceBy1ya;
 
 use Exception;
 
-class Product
+class Product extends Model
 {
-    protected int $id;
-    protected string $naziv;
-    protected float $cena;
-    protected int $id_kat;
-    protected int $id_spec;
-    protected int $id_marka;
-    protected int $availibleQuantity;
-    protected static $db = null;
+    public int $id;
+    public string $naziv;
+    public float $cena;
+    public int $id_kat;
+    public int $id_spec;
+    public int $id_marka;
+    public int $availibleQuantity;
+    private static $db = null;
 
-    protected static $dbMapper = ['cena_proizvod' => 'cena',
-                                'dostupna_kolicina' => 'availibleQuantity',
-                                'id_kategorija' => 'id_kat',
-                                'id_specifikacija' => 'id_spec',
-                                'naziv_proizvod' => 'naziv'];
+    private static $dbMapper = ['cena_proizvod' => 'cena',
+                                  'dostupna_kolicina' => 'availibleQuantity',
+                                  'id_kategorija' => 'id_kat',
+                                  'id_specifikacija' => 'id_spec',
+                                  'naziv_proizvod' => 'naziv'];
 
     // public function __construct($id = NULL, $naziv, $cena, $id_kat, $id_spec, $id_marka, $availibleQuantity = 1)
     // {
@@ -40,28 +40,17 @@ class Product
                 $this->$key = $value;
 
             // proverava da li property postoji u nizu dbMapper
-            } else if(array_key_exists($key, self::$dbMapper)) {
+            } 
+            else if(array_key_exists($key, self::$dbMapper)) {
                 $propertyValue = self::$dbMapper[$key];
 
             // ako postoji property u objektu dodeljuje mu vrednost
-                if (property_exists($this, $propertyValue)){
-                    $this->$propertyValue = $value;
-                }
+                     if (property_exists($this, $propertyValue)){
+                            $this->$propertyValue = $value;
+                        }
             }           
         }
     }
-
-    public function __get($property)
-    {
-        return $this->$property;
-    }
-
-    public function __set($property, $value)
-    {
-        $this->$property = $value;
-    }
-
-
 
     protected static function getDb(): \PDO
     {
@@ -89,11 +78,35 @@ class Product
         $stmt->execute();
         $niz = $stmt->fetch();
 
-        // if(empty($niz)){
-        //     throw new Exception("Proizvod pod id $id ne postoji");
-        // }
+        if(empty($niz)){
+            throw new Exception("Proizvod pod id $id ne postoji");
+        }
         return new Product($niz);
     }
+
+
+
+
+    public function load($obj)      // NIJE GOTOVOOOO
+    {
+
+        //var_dump(get_object_vars($obj));
+        
+        foreach(get_object_vars($obj) as $key=>$value){
+            //var_dump($key);
+            if (!property_exists($this, 'id') || !property_exists($obj, 'id') || $this->id != $obj->id) {
+                throw new Exception("ID se ne podudaraju!");
+            }
+            if (property_exists($this, $key)){
+                $this->$key = $obj->$key; 
+            }
+        }
+
+        return $this;
+    }
+
+
+
 
     static function fetchData()
     {
@@ -133,7 +146,7 @@ class Product
         }
     }
 
-    function createData()
+    public function createData()
     {
         try {
             $query = 'INSERT INTO Proizvod (naziv_proizvod, cena_proizvod, id_kategorija, id_specifikacija, id_marka, dostupna_kolicina)
@@ -156,7 +169,7 @@ class Product
         }
     }
 
-    function deleteData()
+    public function deleteData()
     {
         try {
             $query = 'DELETE FROM Proizvod WHERE id = :id';
@@ -172,4 +185,29 @@ class Product
             throw new \PDOException($e->getMessage(), $e->getCode());
         }
     }
+
+    public function updateData()
+    {
+        try {
+            $query =    'UPDATE Proizvod SET
+                        naziv_proizvod = :naziv, cena_proizvod = :cena, id_kategorija = :id_kat, id_specifikacija = :id_spec, id_marka = :id_marka, dostupna_kolicina = :availibleQuantity
+                        WHERE id = :id';
+
+            $stmt = self::getDb()->prepare($query);
+
+            $stmt->bindValue(':id', $this->id);
+            $stmt->bindValue(':naziv', $this->naziv);
+            $stmt->bindValue(':cena', $this->cena);
+            $stmt->bindValue(':id_kat', $this->id_kat);
+            $stmt->bindValue(':id_spec', $this->id_spec);
+            $stmt->bindValue(':id_marka', $this->id_marka);
+            $stmt->bindValue(':availibleQuantity', $this->availibleQuantity);
+
+            $stmt->execute();
+
+        } catch (Exception $e) {
+
+            throw new Exception($e->getMessage());
+        }
+    } 
 };
