@@ -2,7 +2,7 @@
 
     namespace EcomerceBy1ya;
     
-    class BrandForm extends Model
+    class BrandForm
     {
         public int $id;
         public string $naziv_brand;

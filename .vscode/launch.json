@@ -1,5 +1,6 @@
 {
     "configurations": [
+
         {
             "name": "Listen for Xdebug",
             "type": "php",
@@ -11,6 +12,7 @@
         "type": "php",
         "request": "launch",
         "program": "${file}",
+        "runtimeExecutable":"/usr/bin/php",
         "cwd": "${fileDirname}",
         "port": 9000
     }

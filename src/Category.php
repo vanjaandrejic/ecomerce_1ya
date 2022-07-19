@@ -10,6 +10,11 @@ class Category extends Model
     public string $naziv_cat;
     private static $db = null;
 
+    protected static function tableName()
+    {
+        return 'Kategorija';
+    }
+
     private static $dbMapCat = [
         'naziv_kategorije' => 'naziv_cat'
     ];

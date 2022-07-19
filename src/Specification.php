@@ -11,6 +11,11 @@ class Specification extends Model
     public int $ram;
     public int $rom;
 
+    protected static function tableName()
+    {
+        return 'Specifikacija';
+    }
+
     private static $db = null;
 
     private static $dbMapSpec = [

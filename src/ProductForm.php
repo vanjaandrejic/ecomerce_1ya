@@ -2,7 +2,7 @@
 
 namespace EcomerceBy1ya;
 
-class ProductForm extends Model
+class ProductForm
 {
     public int $id;
     public string $naziv;

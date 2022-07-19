@@ -2,7 +2,7 @@
 
     namespace EcomerceBy1ya;
     
-    class CategoryForm extends Model
+    class CategoryForm
     {
         public int $id;
         public string $naziv_cat;

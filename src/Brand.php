@@ -9,6 +9,10 @@ class Brand extends Model
     public int $id;
     public string $naziv_brand;
 
+    protected static function tableName()
+    {
+        return 'Marka';
+    }
     private static $db = null;
 
     private static $dbMapBrand = [

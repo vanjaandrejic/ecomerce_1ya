@@ -2,7 +2,7 @@
 
     namespace EcomerceBy1ya;
     
-    class SpecificationForm extends Model
+    class SpecificationForm 
     {
         public int $id;
         public string $processor;
