@@ -87,7 +87,7 @@ class Product extends Model
 
 
 
-    public function load($obj)      // NIJE GOTOVOOOO
+    public function load($obj)
     {
 
         //var_dump(get_object_vars($obj));

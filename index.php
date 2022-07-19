@@ -4,6 +4,13 @@ require_once 'vendor/autoload.php';
 
 use EcomerceBy1ya\Product;
 use EcomerceBy1ya\ProductForm;
+use EcomerceBy1ya\Specification;
+use EcomerceBy1ya\SpecificationForm;
+use EcomerceBy1ya\Category;
+use EcomerceBy1ya\CategoryForm;
+use EcomerceBy1ya\Brand;
+use EcomerceBy1ya\BrandForm;
+
 
 // require_once "Product.php";
 // require_once "Cart.php";
@@ -34,20 +41,60 @@ $cartItem3 = $cart->addProduct($product3, 3); */
 
 //$product->createData();
 try {
-    $product = Product::getByIdFromDb(17);
-    $productForm = ProductForm::loadProduct($product);
-    $productForm->updateForm(['naziv'=>'106 pluss', 'cena'=>28]);
-    $product->load($productForm);
-    $product->updateData();
+
+    // $product = Product::getByIdFromDb(17);
+    // $productForm = ProductForm::loadProduct($product);
+    // $productForm->updateForm(['naziv'=>'106 pluss', 'cena'=>28]);
+
+
+    // $product->load($productForm);
+    // $product->updateData();
+
+
+    //$spec = new Specification(['processor' => 'procesorTEST', 'ram' => 82, 'rom' => 234 ]);
+    //$spec->createData();
+
+    //Specification::fetchData();
+
+    // $spec = Specification::getByIdFromDb(10);
+
+
+    // $specificationForm = SpecificationForm::loadSpec($spec);
+
+    // var_dump($specificationForm);
+
+    // $specificationForm->updateForm(['processor' => 'TESTProc1', 'rom' => 333]); /////////////////
+
+    // var_dump($specificationForm);
+    // $spec->load($specificationForm);
+
+    // var_dump($spec);
+    // $spec->updateData();
+    // Category::fetchData();
+
+    // $cat = new Category(['naziv_cat' => 'Tablet']);
+    // $cat->createData();
+
+    // Category::fetchData();
+
+    // $cat = Category::getByIdFromDb(2);
+    // $catForm = CategoryForm::loadCat($cat);
+    // $catForm->updateForm(['naziv_cat' => 'Laptop']);
+    // $cat->load($catForm);
+    // $cat->updateData();
+
+    Category::fetchData();
+
+    //var_dump($brandForm);
+
+    //var_dump($spec1);
+    
+    //$spec->deleteData();
+
+    //$brand = new Brand(['naziv_brand' => 'DELL']);
+    //$brand->createData();
+
 } catch (Exception $e){
     echo $e->getMessage();
     exit;
 }
-
-
-
-//var_dump($productForm);
-
-//$product->deleteData();
-
-//Product::fetchData();
