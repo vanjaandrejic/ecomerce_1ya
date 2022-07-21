@@ -42,9 +42,9 @@ $cartItem3 = $cart->addProduct($product3, 3); */
 //$product->createData();
 try {
 
-     $product = Product::getByIdFromDb(17);
+     //$product = Product::getByIdFromDb(17);
      
-     var_dump($product);
+     ///var_dump($product);
     // $productForm = ProductForm::loadProduct($product);
     // $productForm->updateForm(['naziv'=>'106 pluss', 'cena'=>28]);
 
@@ -56,10 +56,10 @@ try {
     //$spec = new Specification(['processor' => 'procesorTEST', 'ram' => 82, 'rom' => 234 ]);
     //$spec->createData();
 
-    //Specification::fetchData();
+    Product::fetchData();
 
-     $spec = Specification::getByIdFromDb(10);
-     var_dump($spec);
+     //$spec = Specification::getByIdFromDb(10);
+     //var_dump($spec);
 
 
     // $specificationForm = SpecificationForm::loadSpec($spec);
@@ -80,8 +80,8 @@ try {
 
     // Category::fetchData();
 
-     $cat = Category::getByIdFromDb(2);
-     var_dump($cat);
+     //$cat = Category::getByIdFromDb(2);
+     //var_dump($cat);
     // $catForm = CategoryForm::loadCat($cat);
     // $catForm->updateForm(['naziv_cat' => 'Laptop']);
     // $cat->load($catForm);
@@ -95,8 +95,8 @@ try {
     
     //$spec->deleteData();
 
-    $brand = Brand::getByIdFromDb(1);
-    var_dump($brand);
+    //$brand = Brand::getByIdFromDb(1);
+    //var_dump($brand);
     //$brand->createData();
 
 } catch (Exception $e){

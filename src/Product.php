@@ -19,12 +19,11 @@ class Product extends Model
         return 'Proizvod';
     }
     
-
     private static $dbMapper = ['cena_proizvod' => 'cena',
-                                  'dostupna_kolicina' => 'availibleQuantity',
-                                  'id_kategorija' => 'id_kat',
-                                  'id_specifikacija' => 'id_spec',
-                                  'naziv_proizvod' => 'naziv'];
+                                'dostupna_kolicina' => 'availibleQuantity',
+                                'id_kategorija' => 'id_kat',
+                                'id_specifikacija' => 'id_spec',
+                                'naziv_proizvod' => 'naziv'];
 
     // public function __construct($id = NULL, $naziv, $cena, $id_kat, $id_spec, $id_marka, $availibleQuantity = 1)
     // {
@@ -57,38 +56,16 @@ class Product extends Model
         }
     }
 
-
-
-
-
-
-    public function load($obj)
-    {
-
-        //var_dump(get_object_vars($obj));
-        
-        foreach(get_object_vars($obj) as $key=>$value){
-            //var_dump($key);
-            if (!property_exists($this, 'id') || !property_exists($obj, 'id') || $this->id != $obj->id) {
-                throw new Exception("ID se ne podudaraju!");
-            }
-            if (property_exists($this, $key)){
-                $this->$key = $obj->$key; 
-            }
-        }
-
-        return $this;
-    }
-
-
-
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     static function fetchData()
     {
         try {
             $query = 'SELECT `Proizvod`.*,
                         `Marka` . `naziv_marke`,
-                        `Specifikacija` . `procesor`, `Specifikacija` . `ram_memorija`, `Specifikacija` . `rom_memorija`
+                        `Specifikacija` . `procesor`,
+                        `Specifikacija` . `ram_memorija`,
+                        `Specifikacija` . `rom_memorija`
 
                         FROM `Proizvod`
                            
@@ -164,7 +141,7 @@ class Product extends Model
     public function updateData()
     {
         try {
-            $query =    'UPDATE Proizvod SET
+            $query =   'UPDATE Proizvod SET
                         naziv_proizvod = :naziv, cena_proizvod = :cena, id_kategorija = :id_kat, id_specifikacija = :id_spec, id_marka = :id_marka, dostupna_kolicina = :availibleQuantity
                         WHERE id = :id';
 
