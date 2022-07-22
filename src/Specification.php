@@ -94,27 +94,27 @@ class Specification extends Model
     }
 
 
-    static function fetchData()
-    {
-        try {
-            $query = 'SELECT * FROM Specifikacija';
+    // static function fetchData()
+    // {
+    //     try {
+    //         $query = 'SELECT * FROM Specifikacija';
 
-            $stmt = self::getDb()->prepare($query);
+    //         $stmt = self::getDb()->prepare($query);
 
-            $stmt->execute();
+    //         $stmt->execute();
 
-            $niz = $stmt->fetchAll();
+    //         $niz = $stmt->fetchAll();
 
-            foreach ($niz as $spec) {
+    //         foreach ($niz as $spec) {
 
-                //echo $product['naziv_marke'] . ' ' . $product['naziv_proizvod']. PHP_EOL; // odnosi se na niz
-                echo $spec->procesor . ' ' . $spec->ram_memorija . ' ' .$spec->rom_memorija. PHP_EOL;      // odnosi se na objekat
-            }
-        } catch (\PDOException $e) {
+    //             //echo $product['naziv_marke'] . ' ' . $product['naziv_proizvod']. PHP_EOL; // odnosi se na niz
+    //             echo $spec->procesor . ' ' . $spec->ram_memorija . ' ' .$spec->rom_memorija. PHP_EOL;      // odnosi se na objekat
+    //         }
+    //     } catch (\PDOException $e) {
 
-            throw new \PDOException($e->getMessage(), $e->getCode());
-        }
-    }
+    //         throw new \PDOException($e->getMessage(), $e->getCode());
+    //     }
+    // }
 
     public function createData()
     {

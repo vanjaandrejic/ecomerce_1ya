@@ -3,14 +3,19 @@
 namespace EcomerceBy1ya;
 
 use Exception;
+use PDO;
 
-abstract class Model {
+abstract class Model
+{
 
     protected static abstract function tableName();
     private static $db = null;
-    private static $query = null;
+    private static $query = '';
     private static $bindParams = [];
-    
+    private static $preparedQuery = [];
+    private static $results = [];
+
+
     protected static function getDb(): \PDO
     {
         if (self::$db === null) {
@@ -27,6 +32,7 @@ abstract class Model {
     }
 
 
+
     public static function getByIdFromDb($id)
     {
         $tableName = static::tableName();
@@ -35,31 +41,33 @@ abstract class Model {
 
         $stmt = self::getDb()->prepare($query);
 
-        $stmt->bindValue(':id',(int) $id);
+        $stmt->bindValue(':id', (int) $id);
 
         $stmt->execute();
         $niz = $stmt->fetch();
 
-        if(empty($niz)){
+        if (empty($niz)) {
             throw new Exception("Proizvod pod id $id ne postoji");
         }
         return new Product($niz);
     }
 
 
+
     public function load($obj)
     {
-        foreach(get_object_vars($obj) as $key=>$value){
+        foreach (get_object_vars($obj) as $key => $value) {
             //var_dump($key);
             if (!property_exists($this, 'id') || !property_exists($obj, 'id') || $this->id != $obj->id) {
                 throw new Exception("ID se ne podudaraju!");
             }
-            if (property_exists($this, $key)){
-                $this->$key = $obj->$key; 
+            if (property_exists($this, $key)) {
+                $this->$key = $obj->$key;
             }
         }
         return $this;
     }
+
 
 
     public static function find($select = [])   // vraca SELECT * FROM
@@ -67,38 +75,47 @@ abstract class Model {
         $tableName = static::tableName();
 
         self::$query .= 'SELECT ';
-        if(!empty($select)){
-            foreach($select as $param) {
+        if (!empty($select)) {
+            foreach ($select as $param) {
                 self::$query .= $param;
             }
         } else {
             self::$query .= '*';
         }
 
-        self::$query .= ' FROM '. $tableName;
+        self::$query .= ' FROM ' . $tableName;
+
+        //var_dump(self::$query);
 
         return self::$query;
     }
 
-    public static function join($type = 'INNER', $table, $col1, $col2)
+
+
+    public static function join($table, $col1, $col2, $type = ' INNER')
     {
         $tableName = static::tableName();
-        self::$query .= $type.' JOIN ' . $table . ' ON '. $tableName . $col1 .'='. $table . $col2;  // ???
+        self::$query .= $type . ' JOIN ' . $table . ' ON ' . $tableName . '.' . $col1 . '=' . $table . '.' . $col2;  // ???
     }
+
 
 
     public static function where($table, $col, $value)
     {
-        $strWhere =' WHERE ';
-        $bindStr = ':'.$col;
+        self::queryValidate();
+
+        $strWhere = ' WHERE ';
+        $bindStr = ':' . $col;
         $pos = strpos(self::$query, $strWhere);
 
-        if($pos){
+        if ($pos) {
             $strWhere = ' AND ';
         }
-        self::$query .= $strWhere . $table . '.' . $col . $bindStr;
-        self::$bindParams[] = [$bindStr => $value];
+        self::$query .= $strWhere . $table . '.' . $col . '=' . $bindStr;
+        self::$bindParams[$bindStr] = $value;
     }
+
+
 
     public static function orderBy($table, $col)
     {
@@ -106,11 +123,13 @@ abstract class Model {
 
         $pos = strpos(self::$query, $strOrder);
 
-        if(!$pos){
+        if (!$pos) {
 
-            self::$query .= $strOrder . $table . $col;
+            self::$query .= $strOrder . $table . '.' . $col;
         }
     }
+
+
 
     public static function prepareQuery()
     {
@@ -118,65 +137,46 @@ abstract class Model {
 
             $stmt = self::getDb()->prepare(self::$query);
 
+            if (!empty(self::$bindParams)) {
+                foreach (self::$bindParams as $key => $value) {
+                    $stmt->bindValue($key, $value);
+                }
+            }
+
             $stmt->execute();
 
-            $niz = $stmt->fetchAll();
+            self::$preparedQuery = $stmt->fetchAll();
+        } catch (Exception $e) {
 
-            //var_dump($niz);
-
-            foreach ($niz as $product) {
-
-                //echo $product['naziv_marke'] . ' ' . $product['naziv_proizvod']. PHP_EOL; // odnosi se na niz
-                echo $product->naziv_marke . ' ' . $product->naziv_proizvod . PHP_EOL;      // odnosi se na objekat
-            }
-        } catch (\PDOException $e) {
-
-            throw new \PDOException($e->getMessage(), $e->getCode());
+            throw new Exception($e->getMessage());
         }
     }
-        
-    //Product::find('marka', '');
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    static function fetchData()
+
+    private static function queryValidate()
     {
-        $tableName = static::tableName();
-        try {
-            $query = 'SELECT `Proizvod`.*,
-                        `Marka` . `naziv_marke`,
-                        `Specifikacija` . `procesor`,
-                        `Specifikacija` . `ram_memorija`,
-                        `Specifikacija` . `rom_memorija`
-
-                        FROM `Proizvod`
-
-                        INNER JOIN `Marka` ON `Proizvod`. `id_marka` = `Marka`. `id` 
-                        INNER JOIN `Specifikacija` ON `Proizvod`. `id_specifikacija` = `Specifikacija`. `id`
-
-                        WHERE `Marka` . `naziv_marke` = :marka
-
-                        ORDER BY `Marka`. `naziv_marke`';
-
-            $stmt = self::getDb()->prepare($query);
-
-            $marka = 'Samsung';
-            $stmt->bindValue(':marka', $marka);
-
-            $stmt->execute();
-
-            $niz = $stmt->fetchAll();
-
-            //var_dump($niz);
-
-            foreach ($niz as $product) {
-
-                //echo $product['naziv_marke'] . ' ' . $product['naziv_proizvod']. PHP_EOL; // odnosi se na niz
-                echo $product->naziv_marke . ' ' . $product->naziv_proizvod . PHP_EOL;      // odnosi se na objekat
-            }
-        } catch (\PDOException $e) {
-
-            throw new \PDOException($e->getMessage(), $e->getCode());
+        if (!strpos(self::$query, 'FROM') && !strpos(self::$query, 'SELECT')) {
+            throw new Exception("WHERE mora biti zakacen nakon SELECT i FROM");
         }
     }
+
+
+
+    static function all($niz)
+    {
+        if (!empty(self::$preparedQuery)) {
+            foreach (self::$preparedQuery as $key => $value) {
+                foreach ($niz as $col) {
+                    if ($col == $key) {
+                        self::$results[$col] = $value;
+
+                        var_dump($value);
+                    }
+                }
+            }
+        }
+    }
+
+    
 }

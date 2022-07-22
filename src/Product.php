@@ -14,6 +14,7 @@ class Product extends Model
     public int $id_marka;
     public int $availibleQuantity;
 
+
     protected static function tableName()
     {
         return 'Proizvod';
@@ -58,45 +59,45 @@ class Product extends Model
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    static function fetchData()
-    {
-        try {
-            $query = 'SELECT `Proizvod`.*,
-                        `Marka` . `naziv_marke`,
-                        `Specifikacija` . `procesor`,
-                        `Specifikacija` . `ram_memorija`,
-                        `Specifikacija` . `rom_memorija`
+    // static function fetchData()
+    // {
+    //     try {
+    //         $query = 'SELECT `Proizvod`.*,
+    //                     `Marka` . `naziv_marke`,
+    //                     `Specifikacija` . `procesor`,
+    //                     `Specifikacija` . `ram_memorija`,
+    //                     `Specifikacija` . `rom_memorija`
 
-                        FROM `Proizvod`
+    //                     FROM `Proizvod`
                            
-                        INNER JOIN `Marka` ON `Proizvod`. `id_marka` = `Marka`. `id` 
-                        INNER JOIN `Specifikacija` ON `Proizvod`. `id_specifikacija` = `Specifikacija`. `id`
+    //                     INNER JOIN `Marka` ON `Proizvod`. `id_marka` = `Marka`. `id` 
+    //                     INNER JOIN `Specifikacija` ON `Proizvod`. `id_specifikacija` = `Specifikacija`. `id`
 
-                        WHERE `Marka` . `naziv_marke` = :marka
+    //                     WHERE `Marka` . `naziv_marke` = :marka
 
-                        ORDER BY `Marka`. `naziv_marke`';
+    //                     ORDER BY `Marka`. `naziv_marke`';
 
-            $stmt = self::getDb()->prepare($query);
+    //         $stmt = self::getDb()->prepare($query);
 
-            $marka = 'Samsung';
-            $stmt->bindValue('marka', $marka);
+    //         $marka = 'Samsung';
+    //         $stmt->bindValue('marka', $marka);
 
-            $stmt->execute();
+    //         $stmt->execute();
 
-            $niz = $stmt->fetchAll();
+    //         $niz = $stmt->fetchAll();
 
-            //var_dump($niz);
+    //         //var_dump($niz);
 
-            foreach ($niz as $product) {
+    //         foreach ($niz as $product) {
 
-                //echo $product['naziv_marke'] . ' ' . $product['naziv_proizvod']. PHP_EOL; // odnosi se na niz
-                echo $product->naziv_marke . ' ' . $product->naziv_proizvod . PHP_EOL;      // odnosi se na objekat
-            }
-        } catch (\PDOException $e) {
+    //             //echo $product['naziv_marke'] . ' ' . $product['naziv_proizvod']. PHP_EOL; // odnosi se na niz
+    //             echo $product->naziv_marke . ' ' . $product->naziv_proizvod . PHP_EOL;      // odnosi se na objekat
+    //         }
+    //     } catch (\PDOException $e) {
 
-            throw new \PDOException($e->getMessage(), $e->getCode());
-        }
-    }
+    //         throw new \PDOException($e->getMessage(), $e->getCode());
+    //     }
+    // }
 
     public function createData()
     {
