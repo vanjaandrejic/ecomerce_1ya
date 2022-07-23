@@ -22,7 +22,8 @@ try {
     Product::where('Marka', 'naziv_marke', 'Samsung');
     Product::orderBy('Marka', 'naziv_marke');
     Product::prepareQuery();
-    Product::all(['naziv_marke', 'naziv_proizvod', 'procesor']);
+    Product::all(['naziv_marke', 'naziv_proizvod', 'cena_proizvod']);
+    $printResult = Product::printResult();
 
 } catch (Exception $e){
     echo $e->getMessage();

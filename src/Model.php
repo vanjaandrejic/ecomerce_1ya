@@ -166,16 +166,26 @@ abstract class Model
     static function all($niz)
     {
         if (!empty(self::$preparedQuery)) {
-            foreach (self::$preparedQuery as $key => $value) {
+            foreach (self::$preparedQuery as $key) {
                 foreach ($niz as $col) {
-                    if ($col == $key) {
-                        self::$results[$col] = $value;
-
-                        var_dump($value);
-                    }
+                    if (property_exists($key, $col)){
+                        $tempArr[$col]=$key->$col;              
+                    }                    
                 }
+                self::$results[] = $tempArr;
             }
         }
+        //var_dump(self::$results);
+    }
+    
+    static function printResult()
+    {
+       echo $tableDisplay = 'Naziv'. "\t" . 'Model' . "\t". 'Cena'. "\t". "\n" ;
+        foreach (self::$results as $res) {
+
+                echo $res['naziv_marke'] .' '. $res['naziv_proizvod'] .'  '. '$'. $res['cena_proizvod']. PHP_EOL; // odnosi se na niz
+               
+             }
     }
 
     
